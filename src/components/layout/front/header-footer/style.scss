@@ -51,3 +51,16 @@
 }
 
 //------------- FOOTER STYLES -------------//
+
+#footer{
+  background-color: #111827;
+  padding: 50px 0;
+  .footer-container{
+    h1, p{
+      color: white;
+    }
+    h1{
+      font-size: 40px;
+    }
+  }
+}

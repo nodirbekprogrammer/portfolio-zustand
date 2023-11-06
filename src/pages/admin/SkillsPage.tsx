@@ -15,6 +15,7 @@ import useSkills from "../../states/skills";
 
 const EducationPage = () => {
   const [form] = Form.useForm();
+
   const {
     search,
     total,
@@ -34,38 +35,6 @@ const EducationPage = () => {
     handleSearch,
     setPage,
   } = useSkills();
-
-
-  // const { userId } = useAuth();
-
-  // const [form] = Form.useForm();
-  // const [loading, setLoading] = useState(false);
-  // const [page, setPage] = useState(1);
-  // const [total, setTotal] = useState(0);
-  // const [skills, setSkills] = useState([]);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // const showModal = () => {
-  //   form.resetFields();
-  //   setIsModalOpen(true);
-  // };
-
-  // const closeModal = () => {
-  //   setIsModalOpen(false);
-  // };
-
-  // const getSkills = useCallback(async () => {
-  //   try {
-  //     setLoading(true);
-  //     const { data } = await request(
-  //       `skills?user=${userId}&page=${page}&limit=${PAGELIMIT}`
-  //     );
-  //     setTotal(data.pagination.total);
-  //     setSkills(data.data);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, [page, userId]);
 
   useEffect(() => {
     getData(search, page, user);

@@ -34,24 +34,25 @@ export const useAuth = create<AuthTypes>((set) => ({
         request.defaults.headers.Authorization = `Bearer ${res.data.token}`;
         set({ isAuthenticated: true, userId: res.data.user._id, role: role });
         navigate("/dashboard");
-        message.success("You have successfully logged in!")
+        message.success("You have successfully logged in!");
       }
     } catch (err) {
-      message.error("Error")
+      message.error("Error");
     }
   },
   register: async (data, navigate) => {
     try {
-      const res = await request.post("auth/register", data);
-      if (res.data.user.role === "user") navigate("/register-succes");
-      else {
-        Cookies.set(TOKEN, res.data.token);
-        Cookies.set(USERID, res.data.user._id);
-        request.defaults.headers.Authorization = `Bearer ${res.data.token}`;
-        set({ isAuthenticated: true });
-        set({ userId: res.data.user._id });
-        navigate("/user-experiences");
-      }
+      await request.post("auth/register", data);
+      navigate("/register-succes");
+      message.success("You have succesfully registered");
+      // else {
+      //   Cookies.set(TOKEN, res.data.token);
+      //   Cookies.set(USERID, res.data.user._id);
+      //   request.defaults.headers.Authorization = `Bearer ${res.data.token}`;
+      //   set({ isAuthenticated: true });
+      //   set({ userId: res.data.user._id });
+      //   navigate("/user-experiences");
+      // }
     } catch (err) {
       console.log(err);
     }

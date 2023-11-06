@@ -8,6 +8,7 @@ import DashboardLayout from "./components/layout/dashboard/DashboardLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
 import SkillsPage from "./pages/admin/SkillsPage";
 import EducationPage from "./pages/admin/EducationPage";
+import RegisterSucces from "./pages/public/RegisterSucces";
 // import NotFoundPage from "./pages/NotFoundPage";
 
 
@@ -19,6 +20,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/register-succes" element={<RegisterSucces/>}/>
         </Route>
         <Route path="" element={<DashboardLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />

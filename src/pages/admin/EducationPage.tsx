@@ -10,13 +10,13 @@ import {
   Table,
 } from "antd";
 
-import { longDate } from "../../utils/dateConvert";
 import useEducation from "../../states/education";
+import { longDate } from "../../utils/dateConvert";
 import { PAGELIMIT } from "../../constants";
 
 const EducationPage = () => {
-
   const [form] = Form.useForm();
+
   const {
     search,
     total,
@@ -37,40 +37,8 @@ const EducationPage = () => {
     setPage,
   } = useEducation();
 
-  console.log(data);
-  
-
-  // const [form] = Form.useForm();
-  // const [loading, setLoading] = useState(false);
-  // const [page, setPage] = useState(1);
-  // const [total, setTotal] = useState(0);
-  // const [educations, setEducations] = useState([]);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // const showModal = () => {
-  //   form.resetFields();
-  //   setIsModalOpen(true);
-  // };
-
-  // const closeModal = () => {
-  //   setIsModalOpen(false);
-  // };
-
-  // const getEducations = useCallback(async () => {
-  //   try {
-  //     setLoading(true);
-  //     const { data } = await request(
-  //       `education?user=${user}&page=${page}&limit=${PAGELIMIT}`
-  //     );
-  //     setTotal(data.pagination.total);
-  //     setEducations(data.data);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, [page, userId]);
-
   useEffect(() => {
-    getData(search, page, user);
+    getData(search, page, user,);
   }, [getData, search, page, user]);
 
   const columns = [
@@ -111,13 +79,15 @@ const EducationPage = () => {
       key: "_id",
       render: (id: string) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => editData(form, id)}>Edit</Button>
+          <Button type="primary" onClick={() => editData(form, id)}>
+            Edit
+          </Button>
           <Button type="primary" onClick={() => deleteData(id)} danger>
             Delete
           </Button>
         </Space>
       ),
-    }, 
+    },
   ];
 
   return (
