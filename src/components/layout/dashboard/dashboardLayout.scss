@@ -1,0 +1,27 @@
+.admin-logo {
+  padding: 24px;
+  font-size: 20px;
+  color: white;
+}
+
+.admin-aside {
+  height: 100vh;
+  // color: #6a5acd;
+}
+
+.admin-header {
+  background-color: #ffffff !important;
+  svg{
+    fill: black !important;
+  }
+  /* border-bottom: 1px solid #001529; */
+}
+
+.admin-header svg {
+  fill: white;
+}
+
+.admin-main {
+  height: calc(100vh - 114px);
+  overflow: auto;
+}

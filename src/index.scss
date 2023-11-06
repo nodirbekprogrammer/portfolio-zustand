@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800;900&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+*, *::after, *::before{
+  box-sizing: border-box;
+}
+
+$main-bg: #111827;
+$text-primary: #9CA3AF;
+$button-bg: slateblue;
+
+:root {
+  --main-bg: #111827;
+  --text-primary: #9CA3AF;
+  --button-bg: slateblue;
+}
+
+a{
+  text-decoration: none;
+}
+
+button{
+  background-color: transparent;
+}
+
+li{
+  list-style-type: none;
+}
+
+.container{
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}

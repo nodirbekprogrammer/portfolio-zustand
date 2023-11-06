@@ -1,0 +1,53 @@
+//------------- HEADER STYLES -------------//
+
+@import "../../../../style/mixins.scss";
+
+#header {
+  height: 100px;
+  background-color: #111827;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  .header-container {
+    height: 100%;
+    @include flex;
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+      p{
+        margin-bottom: 0 !important;
+        color: silver;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 2px;
+      }
+    }
+    .nav-right{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      .nav-btn{
+        font-size: 20px;
+        padding: 15px 25px;
+        color: silver;
+        border-radius: 20px;
+        background-color: var(--button-bg);
+        transition: .3s;
+        font-weight: 600;
+        &:hover{
+          transform: translateY(-3px);
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+//------------- FOOTER STYLES -------------//
