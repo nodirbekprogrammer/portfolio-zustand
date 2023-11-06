@@ -20,7 +20,7 @@ const HomePage = () => {
               <a className="more-link" href="#about">Learn more</a>
             </div>
           </div>
-          <img src="/public/hero-3.webp" alt="" />
+          <img src="/hero-3.webp" alt="" />
         </div>
       </section>
       <section id="about">

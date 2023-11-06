@@ -7,7 +7,7 @@ const Header = () => {
       <nav className="container header-container">
         <NavLink to="/">
           <div className="logo">
-            <img src="/public/mylogo.jpg" alt="logo" />
+            <img src="/mylogo.jpg" alt="logo" />
             <p>CodeRare</p>
           </div>
         </NavLink>
