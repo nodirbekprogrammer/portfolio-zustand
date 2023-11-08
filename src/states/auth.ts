@@ -10,6 +10,7 @@ type AuthTypes = {
   isAuthenticated: boolean;
   userId: string;
   role: null | string;
+  loading: boolean;
   login: (data: Login, navigate: NavigateFunction) => void;
   register: (data: Register, navigate: NavigateFunction) => void;
   logOut: (navigate: NavigateFunction) => void;
@@ -18,21 +19,28 @@ type AuthTypes = {
 export const useAuth = create<AuthTypes>((set) => ({
   isAuthenticated: Cookies.get(TOKEN) ? true : false,
   userId: Cookies.get(USERID) || "",
+  loading: false,
   role: Cookies.get(ROLE) || "",
   login: async (data, navigate) => {
     try {
+      set({ loading: true });
       const res = await request.post("auth/login", data);
       const role = res.data.user.role;
+
+      Cookies.set(TOKEN, res.data.token);
+      Cookies.set(ROLE, res.data.user.role);
+      request.defaults.headers.Authorization = `Bearer ${res.data.token}`;
 
       if (role === "user") {
         navigate("/user-account");
         message.success("You are not yet a client, please wait");
-      } else {
-        Cookies.set(TOKEN, res.data.token);
+      } else if (role === "client") {
         Cookies.set(USERID, res.data.user._id);
-        Cookies.set(ROLE, res.data.user.role);
-        request.defaults.headers.Authorization = `Bearer ${res.data.token}`;
         set({ isAuthenticated: true, userId: res.data.user._id, role: role });
+        navigate("/dashboard");
+        message.success("You have successfully logged in!");
+      }else{
+        set({ userId: "" });
         navigate("/dashboard");
         message.success("You have successfully logged in!");
       }
@@ -50,7 +58,7 @@ export const useAuth = create<AuthTypes>((set) => ({
       //   Cookies.set(USERID, res.data.user._id);
       //   request.defaults.headers.Authorization = `Bearer ${res.data.token}`;
       //   set({ isAuthenticated: true });
-      //   set({ userId: res.data.user._id });
+      //   set({ user: res.data.user._id });
       //   navigate("/user-experiences");
       // }
     } catch (err) {

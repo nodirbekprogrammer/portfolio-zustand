@@ -1,7 +1,12 @@
-const DashboardPage = () => {
-  return (
-    <div>DashboardPage</div>
-  )
-}
+import { Fragment } from "react";
 
-export default DashboardPage
+const DashboardPage = () => {
+
+  return (
+    <Fragment>
+      <div>DashboardPage</div>
+    </Fragment>
+  );
+};
+
+export default DashboardPage;

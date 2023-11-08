@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from "react";
+import { Fragment, memo, useEffect } from "react";
 import {
   Button,
   Flex,
@@ -10,12 +10,13 @@ import {
   Table,
 } from "antd";
 
-import useEducation from "../../states/education";
-import { longDate } from "../../utils/dateConvert";
 import { PAGELIMIT } from "../../constants";
+import { longDate } from "../../utils/dateConvert";
+import { UserInfo } from "../../types/userInfo";
 import { useAuth } from "../../states/auth";
+import useExperinence from "../../states/experince";
 
-const EducationPage = () => {
+const ExperiencePage = () => {
   const [form] = Form.useForm();
 
   const {
@@ -35,7 +36,7 @@ const EducationPage = () => {
     closeModal,
     handleSearch,
     setPage,
-  } = useEducation();
+  } = useExperinence();
 
   const { userId } = useAuth();
 
@@ -45,35 +46,41 @@ const EducationPage = () => {
 
   const columns = [
     {
-      title: "Education",
-      dataIndex: "name",
-      key: "name",
+      title: "Full name",
+      dataIndex: "user",
+      key: "user",
+      render: (user: UserInfo) =>
+        `${user?.firstName ?? "Not Found"} ${user?.lastName ?? ""}`,
+    },
+    {
+      title: "Position",
+      dataIndex: "workName",
+      key: "workName",
+    },
+    {
+      title: "Company",
+      dataIndex: "companyName",
+      key: "workName",
     },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
       render: (data: string) => (
-        <p
-          style={{
-            marginBottom: "0px",
-          }}
-        >
-          {data.slice(0, 40)}
-        </p>
+        <p style={{ marginBottom: "0px" }}>{data.slice(0, 40)}...</p>
       ),
     },
     {
       title: "Started",
       dataIndex: "startDate",
       key: "startDate",
-      render: (data: string) => <p>{longDate(data.split("T")[0])}</p>,
+      render: (date: string) => <p>{longDate(date)}</p>,
     },
     {
       title: "Finished",
       dataIndex: "endDate",
       key: "endDate",
-      render: (data: string) => <p>{longDate(data.split("T")[0])}</p>,
+      render: (date: string) => <p>{longDate(date)}</p>,
     },
     {
       title: "Action",
@@ -84,26 +91,38 @@ const EducationPage = () => {
           <Button type="primary" onClick={() => editData(form, id, userId)}>
             Edit
           </Button>
-          <Button type="primary" onClick={() => deleteData(id, userId)} danger>
+          <Button
+            type="primary"
+            danger
+            onClick={() =>
+              Modal.confirm({
+                title: "Do you want to delete this experience?",
+                onOk: () => deleteData(id, userId),
+              })
+            }
+          >
             Delete
           </Button>
         </Space>
       ),
     },
   ];
-
   return (
     <Fragment>
       <Table
         className="skills-table"
-        bordered={true}
         scroll={{
           x: 1000,
         }}
+        pagination={false}
+        loading={loading}
+        dataSource={data}
+        columns={columns}
+        bordered={true}
         title={() => (
           <Fragment>
             <Flex align="center" justify="space-between" gap={36}>
-              <h1 className="skills-title">Education ({total})</h1>
+              <h1 className="skills-title">Experience ({total})</h1>
               <Input
                 className="search-input"
                 value={search}
@@ -112,15 +131,11 @@ const EducationPage = () => {
                 placeholder="Searching..."
               />
               <Button onClick={() => showModal(form)} type="primary">
-                Add education
+                Add experience
               </Button>
             </Flex>
           </Fragment>
         )}
-        pagination={false}
-        loading={loading}
-        dataSource={data}
-        columns={columns}
       />
       {total > PAGELIMIT ? (
         <Pagination
@@ -132,16 +147,16 @@ const EducationPage = () => {
         />
       ) : null}
       <Modal
-        title="Education data"
+        title="Experience data"
         maskClosable={false}
         confirmLoading={isModalLoading}
-        okText={selected === null ? "Add education" : "Save education"}
+        okText={selected === null ? "Add experience" : "Save experience"}
         open={isModalOpen}
         onOk={() => handleOk(form, userId)}
         onCancel={closeModal}
       >
         <Form
-          name="category"
+          name="experience"
           autoComplete="off"
           labelCol={{
             span: 24,
@@ -152,29 +167,30 @@ const EducationPage = () => {
           form={form}
         >
           <Form.Item
-            label="Name"
-            name="name"
+            label="Position"
+            name="workName"
             rules={[
               {
                 required: true,
-                message: "Please include educational institution name!",
+                message: "Please include your role or position!",
               },
             ]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="Level"
-            name="level"
+            label="Company"
+            name="companyName"
             rules={[
               {
                 required: true,
-                message: "Please include your study level!",
+                message: "Please include company you work for!",
               },
             ]}
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Description"
             name="description"
@@ -182,15 +198,16 @@ const EducationPage = () => {
               {
                 required: true,
                 message:
-                  "Please include a brief description of your education!",
+                  "Please enter a brief description about your experience !",
               },
             ]}
           >
             <Input.TextArea showCount maxLength={100} />
           </Form.Item>
+
           <Flex align="center" justify="space-between">
             <Form.Item
-              label="Started"
+              label="Start date"
               name="startDate"
               rules={[
                 {
@@ -200,8 +217,9 @@ const EducationPage = () => {
             >
               <input className="date-picker" type="date" />
             </Form.Item>
+
             <Form.Item
-              label="Finished"
+              label="End date"
               name="endDate"
               rules={[
                 {
@@ -218,4 +236,6 @@ const EducationPage = () => {
   );
 };
 
-export default EducationPage;
+const MemoExperiencePage = memo(ExperiencePage);
+
+export default MemoExperiencePage;

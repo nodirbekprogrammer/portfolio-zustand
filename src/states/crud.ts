@@ -1,34 +1,34 @@
 import React from "react";
+import { FormInstance } from "antd";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+
 import { request } from "../server/request";
-import { FormInstance } from "antd";
 import ApiData from "../types/api";
-import { ROLE, USERID } from "../constants";
-import Cookies from "js-cookie";
+import PhotoData from "../types/photo";
 
 const CRUD = <T>(url: string) => {
-
   interface DataStateTypes {
     search: string;
     total: number;
     page: number;
     loading: boolean;
+    photoLoad: boolean;
+    photo: PhotoData | null;
     data: T[];
     selected: null | string;
     isModalLoading: boolean;
     isModalOpen: boolean;
-    role?: string | null;
-    user?: string;
-    getData: (search: string, page: number, user: string | undefined) => void;
-    // getSingleData: (id: string, form: FormInstance<object>) => void;
-    handleOk: (form: FormInstance) => void;
-    editData: (form: FormInstance, id: string) => void;
-    deleteData: (id: string) => void;
+
+    getData: (search: string, page: number, userId: string) => void;
+    handleOk: (form: FormInstance, userId: string) => void;
+    editData: (form: FormInstance, id: string, userId: string) => void;
+    deleteData: (id: string, userId: string) => void;
     showModal: (form: FormInstance) => void;
     closeModal: () => void;
     handleSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
     setPage: (page: number) => void;
+    uploadPhoto: (file: FormData) => void;
   }
 
   return create<DataStateTypes>()(
@@ -42,8 +42,6 @@ const CRUD = <T>(url: string) => {
         total: 0,
         loading: false,
         data: [],
-        role: Cookies.get(ROLE),
-        user: Cookies.get(USERID),
         imgLoading: false,
         image: {
           _id: "",
@@ -53,15 +51,18 @@ const CRUD = <T>(url: string) => {
         selected: null,
         isModalLoading: false,
         isModalOpen: false,
-        getData: async (search, page, user) => {
+        getData: async (search, page, userId) => {
           try {
-            const params = { search, page, user };
+            const params = { search, page };
             setState({ loading: true });
             const {
               data: { pagination, data },
-            } = await request.get<ApiData>(url, {
-              params,
-            });
+            } = await request.get<ApiData>(
+              `${url}?${userId ? `user=${userId}` : ""}`,
+              {
+                params,
+              }
+            );
             const newData = data.map((el: object, i: number) => ({
               ...el,
               key: i,
@@ -78,7 +79,7 @@ const CRUD = <T>(url: string) => {
         closeModal: () => {
           setState({ isModalOpen: false, photo: null });
         },
-        handleOk: async (form) => {
+        handleOk: async (form, userId) => {
           try {
             const selected = get();
             const values = await form.validateFields();
@@ -92,17 +93,17 @@ const CRUD = <T>(url: string) => {
             } else {
               await request.put(`${url}/${selected}`, values);
             }
-            const { page, search, user, getData } = get();
+            const { page, search, getData } = get();
             setState({
               isModalOpen: false,
             });
-            getData(search, page, user);
+            getData(search, page, userId);
             form.resetFields();
           } finally {
             set({ isModalLoading: false });
           }
         },
-        editData: async (form, id) => {
+        editData: async (form, id, userId) => {
           try {
             setState({
               selected: id,
@@ -110,19 +111,31 @@ const CRUD = <T>(url: string) => {
               isModalOpen: true,
             });
             const { data } = await request.get(`${url}/${id}`);
+            const { page, search, getData } = get();
+            setState({ isModalOpen: false });
+            getData(search, page, userId);
             form.setFieldsValue(data);
           } finally {
             setState({ selected: id, loading: false });
           }
         },
-        deleteData: async (id) => {
+        uploadPhoto: async (file) => {
+          try {
+            setState({ photoLoad: true });
+            const { data } = await request.post(`upload`, file);
+            setState({ photo: data });
+          } finally {
+            setState({ photoLoad: false });
+          }
+        },
+        deleteData: async (id, userId) => {
           try {
             setState({
               loading: true,
             });
             await request.delete(`${url}/${id}`);
-            const { page, search, user, getData } = get();
-            getData(search, page, user);
+            const { page, search, getData } = get();
+            getData(search, page, userId);
           } finally {
             setState({
               loading: false,

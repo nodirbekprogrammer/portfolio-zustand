@@ -11,14 +11,31 @@
 
 .admin-header {
   background-color: #ffffff !important;
-  svg{
+  svg {
     fill: black !important;
   }
   /* border-bottom: 1px solid #001529; */
 }
 
-.admin-header svg {
-  fill: white;
+.admin-header {
+  svg {
+    fill: white;
+  }
+  display: flex;
+  align-items: center;
+  .user{
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h2{
+      margin-bottom: 0;
+    }
+    .ant-badge{
+      margin-right: 20px !important;
+      cursor: pointer;
+    }
+  }
 }
 
 .admin-main {

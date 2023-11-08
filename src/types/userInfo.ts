@@ -16,4 +16,8 @@ export interface UserInfo {
   instagram: string;
   youtube: string;
   facebook: string;
+  password: string;
+  confirmPassword: string;
+  currentPassword: string;
+  newPassword: string;
 }

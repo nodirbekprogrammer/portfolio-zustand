@@ -12,6 +12,7 @@ import {
 
 import { PAGELIMIT } from "../../constants";
 import useSkills from "../../states/skills";
+import { useAuth } from "../../states/auth";
 
 const EducationPage = () => {
   const [form] = Form.useForm();
@@ -25,7 +26,6 @@ const EducationPage = () => {
     page,
     isModalLoading,
     isModalOpen,
-    user,
     getData,
     handleOk,
     editData,
@@ -36,9 +36,11 @@ const EducationPage = () => {
     setPage,
   } = useSkills();
 
+  const { userId } = useAuth();
+
   useEffect(() => {
-    getData(search, page, user);
-  }, [getData, search, page, user]);
+    getData(search, page, userId);
+  }, [getData, search, page, userId]);
 
   const columns = [
     {
@@ -68,10 +70,10 @@ const EducationPage = () => {
       key: "_id",
       render: (id: string) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => editData(form, id)}>
+          <Button type="primary" onClick={() => editData(form, id, userId)}>
             Edit
           </Button>
-          <Button type="primary" onClick={() => deleteData(id)} danger>
+          <Button type="primary" onClick={() => deleteData(id, userId)} danger>
             Delete
           </Button>
         </Space>
@@ -124,7 +126,7 @@ const EducationPage = () => {
         confirmLoading={isModalLoading}
         okText={selected === null ? "Add skill" : "Save skill"}
         open={isModalOpen}
-        onOk={() => handleOk(form)}
+        onOk={() => handleOk(form, userId)}
         onCancel={closeModal}
       >
         <Form
